@@ -47,7 +47,7 @@ config :harpoon, %{
     # Adds middleware to the bottom
     post: [],
     # Mock module to use instead
-    module: MyApp.Harpoon.Example.Mock
+    module: Harpoon.Example.Mock
   },
   # Applies to all Harpoon clients
   :global => %{

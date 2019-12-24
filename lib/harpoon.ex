@@ -21,10 +21,10 @@ defmodule Harpoon do
         mod = Harpoon.Config.for_module(__MODULE__).module
 
         cond do
-          mod != nil and Harpoon.exported?(mod, unquote(name), unquote(arity)) ->
+          mod and Harpoon.exported?(mod, unquote(name), unquote(arity)) ->
             apply(mod, unquote(name), unquote(args))
 
-          mod != nil and Harpoon.exported?(mod, :harpoon_catch, 2) ->
+          mod and Harpoon.exported?(mod, :harpoon_catch, 2) ->
             apply(mod, :harpoon_catch, [unquote(name), unquote(args)])
 
           true ->

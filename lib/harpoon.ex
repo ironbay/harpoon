@@ -21,10 +21,10 @@ defmodule Harpoon do
         mod = Harpoon.Config.for_module(__MODULE__).module
 
         cond do
-          mod != nil and Kernel.function_exported?(mod, unquote(name), unquote(arity)) ->
+          mod != nil and Harpoon.exported?(mod, unquote(name), unquote(arity)) ->
             apply(mod, unquote(name), unquote(args))
 
-          mod != nil and Kernel.function_exported?(mod, :harpoon_catch, 2) ->
+          mod != nil and Harpoon.exported?(mod, :harpoon_catch, 2) ->
             apply(mod, :harpoon_catch, [unquote(name), unquote(args)])
 
           true ->
@@ -32,6 +32,11 @@ defmodule Harpoon do
         end
       end
     end
+  end
+
+  def exported?(mod, fun, arity) do
+    mod.__info__(:functions)
+    |> Enum.member?({fun, arity})
   end
 
   def middleware(mod) do

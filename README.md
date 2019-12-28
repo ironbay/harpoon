@@ -11,6 +11,8 @@ by adding `harpoon` to your list of dependencies in `mix.exs`:
 def deps do
   [
     {:harpoon, github: "ironbay/harpoon"}
+    # Optional
+    {:fishermane, github: "ironbay/harpoon"}
   ]
 end
 ```
@@ -21,11 +23,12 @@ be found at <https://hexdocs.pm/harpoon>.
 
 ## Documentation
 
-Harpoon modules are simply [Tesla](github.com/teamon/tesla) modules.  The only requirement is to specify each function using the `hook` macro and pass in  `client()` to any HTTP calls.
+Harpoon modules are simply [Tesla](github.com/teamon/tesla) modules.  The only requirement is to pass in `client()` to any HTTP calls.  To enable function mocking use the `hook` macro provided by Fisherman
 
 ```elixir
 defmodule Harpoon.Example do
   use Harpoon
+  import Fisherman
 
   plug(Harpoon.Response)
   plug(Tesla.Middleware.BaseUrl, "https://jsonplaceholder.typicode.com/")
@@ -37,7 +40,7 @@ defmodule Harpoon.Example do
 end
 ```
 
-Any application referencing this module can inject their own middleware or mock certain functions in the module
+Any application referencing this module can inject their own middleware or mock certain functions in the module via Fisherman
 
 ```elixir
 config :harpoon, %{
@@ -46,16 +49,18 @@ config :harpoon, %{
     pre: [Tesla.Middleware.Logger]
     # Adds middleware to the bottom
     post: [],
-    # Mock module to use instead
-    module: Harpoon.Example.Mock
   },
   # Applies to all Harpoon clients
   :global => %{
   }
 }
+
+config :fisherman, %{
+  Harpoon.Example => Harpoon.Example.Mock
+}
 ```
 
-If a mock module is specified, any function with matching arity will be called instead.  If `harpoon_catch/2` is defined it will serve as a catch all for all functions and be passed a function name and list of arguments
+If a mock module is specified, any function with matching arity will be called instead.  If `hook_catch/2` is defined it will serve as a catch all for all functions and be passed a function name and list of arguments
 
 ```elixir
 defmodule Harpoon.Example.Mock do
@@ -79,12 +84,14 @@ defmodule Harpoon.Example.Mock do
      ]}
   end
 
-  def harpoon_catch(fun, args) do
+  def hook_catch(fun, args) do
     Logger.info(inspect({fun, args}))
   end
 end
 
 ```
+
+## TODO
 
 ## Harpoon Clients
 

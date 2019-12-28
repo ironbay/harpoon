@@ -15,18 +15,13 @@ defmodule Harpoon.Config do
 
   def defaults(input) do
     Map.merge(
-      %{pre: [], post: [], adapter: nil, module: nil},
+      %{pre: [], post: [], adapter: nil},
       input
     )
   end
 
   def put(mod, cfg) do
     Application.put_env(:harpoon, mod, cfg)
-  end
-
-  def put_module(mod, override) do
-    result = for_module(mod)
-    put(mod, %{result | module: override})
   end
 
   def put_pre(middleware), do: put_pre(:global, middleware)

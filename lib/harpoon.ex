@@ -13,32 +13,6 @@ defmodule Harpoon do
     end
   end
 
-  defmacro hook({name, _, args}, do: body) do
-    arity = Enum.count(args)
-
-    quote do
-      def unquote(name)(unquote_splicing(args)) do
-        mod = Harpoon.Config.for_module(__MODULE__).module
-
-        cond do
-          mod && Harpoon.exported?(mod, unquote(name), unquote(arity)) ->
-            apply(mod, unquote(name), unquote(args))
-
-          mod && Harpoon.exported?(mod, :harpoon_catch, 2) ->
-            apply(mod, :harpoon_catch, [unquote(name), unquote(args)])
-
-          true ->
-            unquote(body)
-        end
-      end
-    end
-  end
-
-  def exported?(mod, fun, arity) do
-    mod.__info__(:functions)
-    |> Enum.member?({fun, arity})
-  end
-
   def middleware(mod) do
     %{pre: global_pre, post: global_post} = Harpoon.Config.for_module()
     %{pre: module_pre, post: module_post} = Harpoon.Config.for_module(mod)

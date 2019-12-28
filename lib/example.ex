@@ -1,5 +1,6 @@
 defmodule Harpoon.Example do
   use Harpoon
+  import Fisherman
 
   plug(Harpoon.Response)
   plug(Tesla.Middleware.BaseUrl, "https://jsonplaceholder.typicode.com/")

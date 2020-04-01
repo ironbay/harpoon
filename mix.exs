@@ -23,7 +23,7 @@ defmodule Harpoon.MixProject do
     [
       {:tesla, "~> 1.3.0"},
       {:fisherman, github: "ironbay/fisherman", optional: true},
-      {:jason, "~> 1.1"}
+      {:jason, "~> 1.1", optional: true}
     ]
   end
 end

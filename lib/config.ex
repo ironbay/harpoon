@@ -1,10 +1,4 @@
 defmodule Harpoon.Config do
-  use Brine
-
-  config :harpoon, %{
-    global: %{}
-  }
-
   def for_module(), do: for_module(:global)
 
   def for_module(mod) do

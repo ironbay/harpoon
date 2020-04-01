@@ -22,8 +22,7 @@ defmodule Harpoon.MixProject do
   defp deps do
     [
       {:tesla, "~> 1.3.0"},
-      {:brine, github: "ironbay/brine"},
-      {:fisherman, github: "ironbay/fisherman"},
+      {:fisherman, github: "ironbay/fisherman", optional: true},
       {:jason, "~> 1.1"}
     ]
   end
